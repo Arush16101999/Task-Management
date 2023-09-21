@@ -29,9 +29,11 @@ app.get("/tasks", (req, res) => {
   const q = "SELECT * FROM user";
   db.query(q, (err, data) => {
     if (err) {
-      return res.json(err);
+      //   return res.json(err);
+      console.error("Error retrieving to get tasks:", err);
+      return res.status(500).json({ error: "Server error" });
     } else {
-      return res.json(data);
+      return res.status(200).json(data);
     }
   });
 });
@@ -42,6 +44,7 @@ app.post("/tasks/add", (req, res) => {
     "INSERT INTO user (`task`, `description`, `assign`, `status`, `priority`) VALUES(?)";
   //   const values = ["task", "description", "assign", "status"];
   //creating post request to add data to the database
+
   const values = [
     req.body.task,
     req.body.description,
@@ -60,6 +63,10 @@ app.delete("/tasks/delete/:id", (req, res) => {
   const taskId = req.params.id;
   const q = "DELETE FROM user WHERE id = ?";
 
+  if (!taskId || isNaN(taskId)) {
+    return res.status(400).json({ error: "Please provide a valid id" });
+  }
+
   db.query(q, [taskId], (err, data) => {
     if (err) return res.json(err);
     return res.json("Task deleted successfully");
@@ -69,19 +76,28 @@ app.delete("/tasks/delete/:id", (req, res) => {
 /**Get Task By ID API*/
 app.get("/tasks/getById/:id", (req, res) => {
   const taskId = req.params.id;
+
   const q = "SELECT * FROM user WHERE id = ?";
 
   db.query(q, [taskId], (err, data) => {
-    if (err) return res.json(err);
-    return res.json(data);
+    if (err) {
+      console.error("Error retrieving to get tasks:", err);
+      return res.status(500).json({ error: "Server error" });
+      //   return res.json(err);
+    } else {
+      // return res.json(data);
+      return res.status(200).json(data);
+    }
   });
 });
 
 /**Update Task API*/
 app.put("/tasks/update/:id", (req, res) => {
   const taskId = req.params.id;
+
   const q =
     "UPDATE user SET task = ?, description = ?, assign = ?, status = ?, priority=? WHERE id = ?";
+
   const values = [
     req.body.task,
     req.body.description,
@@ -91,18 +107,31 @@ app.put("/tasks/update/:id", (req, res) => {
   ];
 
   db.query(q, [...values, taskId], (err, data) => {
-    if (err) return res.json(err);
-    return res.json("Task Updated successfully");
+    if (err) {
+      console.error("Error retrieving to get tasks:", err);
+      return res.status(500).json({ error: "Server error" });
+      //   return res.json(err);
+    } else {
+      return res.status(200).json("Task Updated successfully");
+      // return res.json("Task Updated successfully");
+    }
   });
 });
 
 /**Tracking Task By Status API*/
 app.get("/tasks/get-status/:status", (req, res) => {
   const status = req.params.status;
+
   const q = "SELECT * FROM user WHERE status = ?";
 
   db.query(q, [status], (err, data) => {
-    if (err) return res.json(err);
-    return res.json(data);
+    if (err) {
+      console.error("Error retrieving to get tasks:", err);
+      return res.status(500).json({ error: "Server error" });
+      // return res.json(err);
+    } else {
+      return res.status(200).json(data);
+      // return res.json(data);
+    }
   });
 });
