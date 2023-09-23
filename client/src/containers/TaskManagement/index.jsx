@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Card from "react-bootstrap/Card";
+
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
 import TaskCard from "../../components/Card";
+import Form from "react-bootstrap/Form";
 
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-
-import Table from "react-bootstrap/Table";
-import Badge from "react-bootstrap/Badge";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import TaskTable from "../../components/Table";
 
 const TaskManagement = () => {
   const [tasks, setTasks] = useState([]);
   const [filterStatus, setFilterStatus] = useState("");
-  // const [filterPriority, setFilterPriority] = useState("");
+  const [toggle, setToggle] = useState(false);
 
   useEffect(() => {
     getAllTasks();
@@ -38,6 +36,7 @@ const TaskManagement = () => {
   const handleDeleteTask = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/tasks/delete/${id}`);
+      toast.success("Successfully Deleted!");
       getAllTasks();
     } catch (err) {
       console.log(err);
@@ -52,83 +51,70 @@ const TaskManagement = () => {
     setFilterStatus(event.target.value);
   };
 
+  const handleToggleChange = () => {
+    setToggle(!toggle);
+  };
+
   return (
-    <Container fluid>
+    <Container>
+      <br />
       <Row>
-        <Col>Task Management</Col>
-      </Row>
-      <Row>
-        <Link to="/addTask">
-          <Button variant="outline-light">Add Task</Button>
-        </Link>
-        <Col />
-        <Col md={4}>
-          <b>Filter By Status </b>
-          <Select
-            value={filterStatus}
-            label="Status"
-            // autoWidth
-            sx={{ minWidth: 120 }}
-            onChange={handleChange}
-          >
-            <MenuItem value="">All</MenuItem>
-            <MenuItem value="active">Active</MenuItem>
-            <MenuItem value="done">Done</MenuItem>
-            <MenuItem value="backlog">Backlog</MenuItem>
-          </Select>
+        <Col>
+          <h3>Task Management System</h3>
         </Col>
       </Row>
+      <br />
       <Row>
-        <Table bordered hover variant="dark">
-          <thead>
-            <tr>
-              <th>Task</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Assign To</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredTasks.map((task, index) => (
-              <tr key={index}>
-                <td>{task.task}</td>
-                <td>{task.description}</td>
-                <td>
-                  <Badge
-                    bg={
-                      task.status === "Done"
-                        ? "info"
-                        : task.status === "Active"
-                        ? "success"
-                        : "warning"
-                    }
-                  >
-                    {task.status}
-                  </Badge>
-                </td>
-                <td>{task.assign}</td>
-                <td>
-                  <Link to={`/updateTask/${task.id}`}>
-                    <Button variant="primary">Edit</Button>
-                  </Link>{" "}
-                  <Button
-                    variant="danger"
-                    onClick={() => handleDeleteTask(task.id)}
-                  >
-                    Delete
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <Col />
+        <Col md={2}>
+          <b>Track By Status </b>
+        </Col>
+        <Col md={2}>
+          <Form.Select
+            name="status"
+            size="lg"
+            required
+            onChange={handleChange}
+            value={filterStatus}
+          >
+            <option value="">All </option>
+            <option value="Active">Active</option>
+            <option value="Done">Done</option>
+            <option value="Backlog">Backlog</option>
+          </Form.Select>
+        </Col>
+        <Col md={4}>
+          <Link to="/addTask">
+            <Button variant="outline-light" size="lg">
+              Add Task
+            </Button>
+          </Link>
+        </Col>
+        <Col md={3}>
+          <Form.Check
+            type="switch"
+            id="custom-switch"
+            label={!toggle ? "Switch Cards View" : "Switch Table View"}
+            checked={toggle}
+            onChange={handleToggleChange}
+          />
+        </Col>
       </Row>
-      {/* <Row>
-        {filteredTasks.map((task, index) => (
-          <TaskCard key={index} task={task} />
-        ))}
-      </Row> */}
+      <br />
+      {!toggle ? (
+        <Row>
+          <TaskTable
+            filteredTasks={filteredTasks}
+            handleDeleteTask={handleDeleteTask}
+          />
+        </Row>
+      ) : (
+        <Row>
+          {filteredTasks.map((task, index) => (
+            <TaskCard key={index} task={task} />
+          ))}
+        </Row>
+      )}
     </Container>
   );
 };

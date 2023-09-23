@@ -1,13 +1,12 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import Container from "react-bootstrap/Container";
 
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
 
 const AddTask = () => {
@@ -17,13 +16,11 @@ const AddTask = () => {
     assign: "",
     status: "",
   });
+  //   const navigate = useNavigate();
 
   const handleChange = (event) => {
     // debugger;
     setTask((prev) => ({ ...prev, [event.target.name]: event.target.value }));
-    // const name = e.target.name;
-    // const value = e.target.value;
-    // setTask({ ...task, [name]: value });
   };
 
   const handleClick = async (event) => {
@@ -37,12 +34,11 @@ const AddTask = () => {
       ) {
         axios.post("http://localhost:5000/tasks/add", task);
         toast.success("Successfully Added!");
-        setTask({});
+        setTask({ task: "", description: "", assign: "", status: "" });
+        // navigate("/");
       } else {
         toast.error("Please enter the empty fields");
       }
-
-      // navigate("/");
     } catch (err) {
       toast.error("This didn't work.");
       console.log(err);
@@ -93,7 +89,6 @@ const AddTask = () => {
                 defaultValue={task.task}
                 onChange={handleChange}
               />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
             </Form.Group>
           </Row>
           <Row className="mb-3">
@@ -109,9 +104,6 @@ const AddTask = () => {
                 onChange={handleChange}
                 rows={3}
               />
-              <Form.Control.Feedback type="invalid">
-                Please provide a the Task Description.
-              </Form.Control.Feedback>
             </Form.Group>
           </Row>
           <Row className="mb-3">
@@ -129,9 +121,6 @@ const AddTask = () => {
                 <option value="Done">Done</option>
                 <option value="Backlog">Backlog</option>
               </Form.Select>
-              <Form.Control.Feedback type="invalid">
-                Please Select Status.
-              </Form.Control.Feedback>
             </Form.Group>
           </Row>
           <Row className="mb-3">
@@ -147,9 +136,6 @@ const AddTask = () => {
                 onChange={handleChange}
                 required
               />
-              <Form.Control.Feedback type="invalid">
-                Please Enter Assign Name.
-              </Form.Control.Feedback>
             </Form.Group>
           </Row>
           <Button variant="success" type="submit">
@@ -160,7 +146,7 @@ const AddTask = () => {
         <Link to="/">
           <Button variant="outline-light">Go Back</Button>
         </Link>
-        <Toaster position="bottom-right" reverseOrder={false} />
+        {/* <Toaster position="bottom-right" reverseOrder={false} /> */}
       </Container>
     </div>
   );

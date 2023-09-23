@@ -31,7 +31,7 @@ const TaskCard = ({ task }) => {
               {task.status}
             </Badge>
           </Card.Text>
-          <Card.Text>{task.priority}</Card.Text>
+          <Card.Text>{task.assign}</Card.Text>
           <Button variant="outline-success">Edit</Button>{" "}
           <Button variant="outline-danger">Delete</Button>
         </Card.Body>
