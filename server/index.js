@@ -50,22 +50,10 @@ app.get("/tasks", async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: "Server error" });
   }
-  // db.query(GET_TASK_QUERY, (err, data) => {
-  //   if (err) {
-  //     //   return res.json(err);
-  //     console.error("Error retrieving to get tasks:", err);
-  //     return res.status(500).json({ error: "Server error" });
-  //   } else {
-  //     return res.status(200).json(data);
-  //   }
-  // });
 });
 
 /**Add Task API*/
 app.post("/tasks/add", async (req, res) => {
-  // const q =
-  //   "INSERT INTO user (`task`, `description`, `assign`, `status`) VALUES(?)";
-  //   const values = ["task", "description", "assign", "status"];
   //creating post request to add data to the database
 
   try {
@@ -91,16 +79,6 @@ app.post("/tasks/add", async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: "Server error" });
   }
-  // const values = [
-  //   req.body.task,
-  //   req.body.description,
-  //   req.body.assign,
-  //   req.body.status,
-  // ];
-  // db.query(ADD_TASK_QUERY, [values], (err, data) => {
-  //   if (err) return res.json(err);
-  //   return res.json("Tasks Added successfully");
-  // });
 });
 
 /**Delete Task API*/
@@ -127,18 +105,6 @@ app.delete("/tasks/delete/:id", async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: "Server error" });
   }
-
-  // const taskId = req.params.id;
-  // // const q = "DELETE FROM user WHERE id = ?";
-
-  // if (!taskId || isNaN(taskId)) {
-  //   return res.status(400).json({ error: "Please provide a valid id" });
-  // }
-
-  // db.query(DELETE_TASK_QUERY, [taskId], (err, data) => {
-  //   if (err) return res.json(err);
-  //   return res.json("Task deleted successfully");
-  // });
 });
 
 /**Get Task By ID API*/
@@ -167,20 +133,6 @@ app.get("/tasks/getById/:id", async (req, res) => {
     console.error("Error retrieving task by ID:", error);
     return res.status(500).json({ error: "Server error" });
   }
-  // const taskId = req.params.id;
-
-  // // const q = "SELECT * FROM user WHERE id = ?";
-
-  // db.query(GRT_TASK_BY_ID_QUERY, [taskId], (err, data) => {
-  //   if (err) {
-  //     console.error("Error retrieving to get tasks:", err);
-  //     return res.status(500).json({ error: "Server error" });
-  //     //   return res.json(err);
-  //   } else {
-  //     // return res.json(data);
-  //     return res.status(200).json(data);
-  //   }
-  // });
 });
 
 /**Update Task API*/
@@ -229,38 +181,6 @@ app.put("/tasks/update/:id", async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: "Server error" });
   }
-
-  // const taskId = req.params.id;
-
-  // const check = "SELECT * FROM user WHERE id = ?";
-  // console.log(check);
-  // db.query(check, [taskId], (err, data) => {
-  //   console.log(data);
-  //   if (data && data.length > 0) {
-  //     // const q =
-  //     //   "UPDATE user SET task = ?, description = ?, assign = ?, status = ? WHERE id = ?";
-
-  //     const values = [
-  //       req.body.task,
-  //       req.body.description,
-  //       req.body.assign,
-  //       req.body.status,
-  //     ];
-
-  //     db.query(UPDATE_TASK_QUERY, [...values, taskId], (err, data) => {
-  //       if (err) {
-  //         console.error("Error retrieving to get tasks:", err);
-  //         return res.status(500).json({ error: "Server error" });
-  //         //   return res.json(err);
-  //       } else {
-  //         return res.status(200).json("Task Updated successfully");
-  //         // return res.json("Task Updated successfully");
-  //       }
-  //     });
-  //   } else {
-  //     return res.status(404).json({ error: "Task ID not found" });
-  //   }
-  // });
 });
 
 /**Tracking Task By Status API*/
