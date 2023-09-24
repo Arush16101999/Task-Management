@@ -41,6 +41,7 @@ const TaskTable = (props) => {
                 <Link to={`/updateTask/${task.id}`}>
                   <Button variant="primary">Edit</Button>
                 </Link>{" "}
+                &nbsp;
                 <Button
                   variant="danger"
                   onClick={() => handleDeleteTask(task.id)}
