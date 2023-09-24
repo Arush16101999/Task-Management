@@ -1,18 +1,17 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 // import Row from "react-bootstrap/Row";
 import Badge from "react-bootstrap/Badge";
 
 const TaskCard = ({ task }) => {
   return (
-    <Col lg={3}>
+    <Col xs={7} md={3}>
       <Card
         bg="dark"
         text="white"
-        style={{ width: "18rem" }}
-        className="mb-4"
+        style={{ width: "18rem", height: "16rem" }}
+        className="mb-5"
         border="light"
       >
         <Card.Body className="mb-2">
@@ -32,8 +31,8 @@ const TaskCard = ({ task }) => {
             </Badge>
           </Card.Text>
           <Card.Text>{task.assign}</Card.Text>
-          <Button variant="outline-success">Edit</Button>{" "}
-          <Button variant="outline-danger">Delete</Button>
+          {/* <Button variant="outline-success">Edit</Button>{" "}
+          <Button variant="outline-danger">Delete</Button> */}
         </Card.Body>
       </Card>
     </Col>

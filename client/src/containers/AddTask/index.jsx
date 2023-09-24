@@ -1,7 +1,7 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 import Container from "react-bootstrap/Container";
 
 import Button from "react-bootstrap/Button";
@@ -16,7 +16,37 @@ const AddTask = () => {
     assign: "",
     status: "",
   });
-  //   const navigate = useNavigate();
+
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      getTaskById(id);
+      // axios
+      //   .get(`http://localhost:5000/tasks/getById/${id}`)
+      //   .then((res) => {
+      //     console.log(res);
+      //     setTask({ ...res.data[0] });
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+    }
+  }, [id]);
+
+  // get the task by ID
+  const getTaskById = async (id) => {
+    const data = await axios
+      .get(`http://localhost:5000/tasks/getById/${id}`)
+      .then((res) => {
+        console.log(res);
+        setTask(res.data[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const handleChange = (event) => {
     // debugger;
@@ -32,51 +62,63 @@ const AddTask = () => {
         task.description !== "" &&
         task.task !== ""
       ) {
-        axios.post("http://localhost:5000/tasks/add", task);
-        toast.success("Successfully Added!");
-        setTask({ task: "", description: "", assign: "", status: "" });
-        // navigate("/");
+        if (!id) {
+          await axios.post("http://localhost:5000/tasks/add", task);
+          toast.success("Task Successfully Added!");
+          setTask({ task: "", description: "", assign: "", status: "" });
+          // navigate("/");
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
+        } else {
+          const res = await axios.put(
+            `http://localhost:5000/tasks/update/${id}`,
+            task
+          );
+          setTask({ ...res.data });
+          toast.success("Task Successfully Updated!");
+          console.log(res);
+          navigate("/");
+        }
       } else {
         toast.error("Please enter the empty fields");
       }
     } catch (err) {
-      toast.error("This didn't work.");
+      toast.error("Something went wrong!");
       console.log(err);
     }
   };
 
-  const [validated, setValidated] = useState(false);
+  // const handleSubmit = async (event) => {
+  //   const form = event.currentTarget;
+  //   if (form.checkValidity() === false) {
+  //     event.preventDefault();
+  //     event.stopPropagation();
+  //     setValidated(true);
+  //   }
 
-  const handleSubmit = async (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-      setValidated(true);
-    }
+  //   try {
+  //     if (task.status) {
+  //       axios.post("http://localhost:5000/tasks/add", task);
+  //       setTask({ ...task });
+  //       toast.success("Successfully toasted!");
+  //     } else {
+  //       toast.error("Please add status");
+  //     }
 
-    try {
-      if (task.status) {
-        axios.post("http://localhost:5000/tasks/add", task);
-        setTask({ ...task });
-        toast.success("Successfully toasted!");
-      } else {
-        toast.error("Please add status");
-      }
-
-      // navigate("/");
-    } catch (err) {
-      toast.error("This didn't work.");
-      console.log(err);
-    }
-  };
+  //     // navigate("/");
+  //   } catch (err) {
+  //     toast.error("This didn't work.");
+  //     console.log(err);
+  //   }
+  // };
 
   return (
     <div>
       <Container>
         <h3>Add Task</h3>
         <br />
-        <Form noValidate validated={validated} onSubmit={handleClick}>
+        <Form noValidate onSubmit={handleClick}>
           <Row className="mb-3">
             <Form.Group as={Col} md="4" />
             <Form.Group as={Col} md="4" controlId="task">
@@ -86,7 +128,7 @@ const AddTask = () => {
                 type="text"
                 name="task"
                 placeholder="Task Title"
-                defaultValue={task.task}
+                defaultValue={task.task || ""}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -100,7 +142,7 @@ const AddTask = () => {
                 placeholder="Task Description"
                 required
                 name="description"
-                defaultValue={task.description}
+                defaultValue={task.description || ""}
                 onChange={handleChange}
                 rows={3}
               />
@@ -115,6 +157,7 @@ const AddTask = () => {
                 size="lg"
                 required
                 onChange={handleChange}
+                value={task.status || ""}
               >
                 <option value="">Select Status </option>
                 <option value="Active">Active</option>
@@ -132,21 +175,20 @@ const AddTask = () => {
                 placeholder="Assign"
                 aria-describedby="inputGroupPrepend"
                 name="assign"
-                defaultValue={task.assign}
+                defaultValue={task.assign || ""}
                 onChange={handleChange}
                 required
               />
             </Form.Group>
           </Row>
           <Button variant="success" type="submit">
-            Submit form
+            {id ? "Update Task" : "Add Task"}
           </Button>{" "}
         </Form>
         <br />
         <Link to="/">
           <Button variant="outline-light">Go Back</Button>
         </Link>
-        {/* <Toaster position="bottom-right" reverseOrder={false} /> */}
       </Container>
     </div>
   );

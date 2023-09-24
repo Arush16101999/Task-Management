@@ -2,9 +2,9 @@ import "./App.css";
 import TaskManagement from "./containers/TaskManagement";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AddTask from "./containers/AddTask";
-import UpdateTask from "./containers/UpdateTask";
+// import UpdateTask from "./containers/UpdateTask";
 import { Toaster } from "react-hot-toast";
-import NavBar from "./components/NavBar";
+// import NavBar from "./components/NavBar";
 
 function App() {
   return (
@@ -17,10 +17,9 @@ function App() {
           <Routes>
             <Route path="/" Component={TaskManagement} />
             <Route path="/addTask" Component={AddTask} />
-            <Route path="/updateTask/:id" Component={UpdateTask} />
+            <Route path="/updateTask/:id" Component={AddTask} />
           </Routes>
         </BrowserRouter>
-        {/* <TaskManagement /> */}
       </header>
     </div>
   );
